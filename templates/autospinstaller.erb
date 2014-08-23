@@ -1,0 +1,216 @@
+function Get-Password(){
+Param([Parameter(Mandatory = $true)][String] $account,[Parameter(Mandatory = $true)][String] $userxml)
+[xml]$xml = New-Object system.Xml.XmlDocument
+[xml]$xml = Get-Content $userxml
+foreach($user in $xml.configuration.users.user){if($user.name -eq $account){return $user.password;}}
+}
+$basepath = "<%= @basepath%>";
+$path = $basepath + "\\Puppet-SharePoint\\";
+$xmlpath = $path + "AutoSPInstaller\AutoSPInstallerInput.xml"
+[xml]$xml = New-Object system.Xml.XmlDocument
+[xml]$xml = Get-Content $xmlpath
+
+## XML for users password
+$userxml = "<%= @userxml%>";
+
+## Install parameters
+$key = "<%= @key%>";
+$offline = "<%= @offline%>";
+$autoadminlogon   = "<%= @autoadminlogon%>";
+$setupaccountpassword   = "<%= @setupaccountpassword%>";
+$disableloopbackcheck   = "<%= @disableloopbackcheck%>";
+$disableunusedservices   = "<%= @disableunusedservices%>";
+$disableieenhancedsecurity  = "<%= @disableieenhancedsecurity%>";
+$disablecertificaterevocationlistcheck  = "<%= @certificaterevocationlistcheck%>";
+
+## Farm parameters
+$passphrase = "<%= @passphrase%>";
+$spfarmaccount = "<%= @spfarmaccount%>";
+$spfarmpassword = "<%= @spfarmpassword%>";
+
+$centraladminprovision = "<%= @centraladminprovision%>";
+$centraladmindatabase = "<%= @centraladmindatabase%>";
+$centraladminport = "<%= @centraladminport%>";
+$centraladminssl = "<%= @centraladminssl%>";
+
+$dbserver = "<%= @dbserver%>";
+$dbalias = "<%= @dbalias%>";
+$dbaliasport = "<%= @dbaliasport%>";
+$dbaliasinstance = "<%= @dbaliasinstance%>";
+$dbprefix  = "<%= @dbprefix%>";
+$dbuser = "<%= @dbuser%>";
+$dbpassword = "<%= @dbpassword%>";
+$configdb = "<%= @configdb%>";
+
+## Services part
+$sanboxedcodeservicestart = "<%= @sanboxedcodeservicestart%>";
+$claimstowindowstokenserverstart = "<%= @claimstowindowstokenserverstart%>";
+$claimstowindowstokenserverupdateaccount = "<%= @claimstowindowstokenserverupdateaccount%>";
+
+$smtpinstall = "<%= @smtpinstall%>";
+$smtpoutgoingemailconfigure = "<%= @smtpoutgoingemailconfigure%>";
+$smtpoutgoingserver = "<%= @smtpoutgoingserver%>";
+$smtpoutgoingemailaddress = "<%= @smtpoutgoingemailaddress%>";
+$smtpoutgoingreplytoemail  = "<%= @smtpoutgoingreplytoemail%>";
+
+$incomingemailstart = "<%= @incomingemailstart%>";
+$distributedcachestart = "<%= @distributedcachestart%>";
+$workflowtimerstart = "<%= @workflowtimerstart%>";
+$foundationwebapplicationstart = "<%= @foundationwebapplicationstart%>";
+
+$spapppoolaccount = "<%= @spapppoolaccount%>";
+$spapppoolpassword = "<%= @spapppoolpassword%>";
+$spservicesaccount = "<%= @spservicesaccount%>";
+$spservicespassword = "<%= @spservicespassword%>";
+$spsearchaccount = "<%= @spsearchaccount%>";
+$spsearchpassword = "<%= @spsearchpassword%>";
+$spsuperreaderaccount = "<%= @spsuperreaderaccount%>";
+$spsuperuseraccount = "<%= @spsuperuseraccount%>";
+$spcrawlaccount = "<%= @spcrawlaccount%>";
+$spcrawlpassword = "<%= @spcrawlpassword%>";
+## Log
+$logcompress = "<%= @logcompress%>";
+$iislogspath = "<%= @iislogspath%>";
+$ulslogspath = "<%= @ulslogspath%>";
+$usagelogspath = "<%= @usagelogspath%>";
+
+$spversion = "<%= @spversion%>";
+$computername = "<%= @computername%>";
+$removedefaultwebapp = "<%= @removedefaultwebapp%>";
+
+## WebApp
+$webappurl = "<%= @webappurl%>";
+$applicationPool = "<%= @applicationPool%>";
+$webappname = "<%= @webappname%>";
+$webappport = "<%= @webappport%>";
+$webappdatabasename = "<%= @webappdatabasename%>";
+  
+##DefaultSiteCol
+$siteUrl = "<%= @siteurl%>";
+$sitecolname = "<%= @sitecolname%>";
+$sitecoltemplate = "<%= @sitecoltemplate%>";
+$sitecoltime24 = "<%= @sitecoltime24%>";
+$sitecollcid = "<%= @sitecollcid%>";
+$sitecollocale = "<%= @sitecollocale%>";
+$sitecolowner = "<%= @sitecolowner%>";
+
+### Part get password if not specified
+
+### Part set XML info
+
+## Install
+$xml.Configuration.Install.PIDKey = $key;
+$xml.Configuration.Install.SKU = 'standard';
+$xml.Configuration.Install.OfflineInstall = $offline;
+$xml.Configuration.Install.AutoAdminLogon.Enable = $autoadminlogon;
+$xml.Configuration.Install.AutoAdminLogon.Password = $setupaccountpassword;
+
+$xml.Configuration.Install.Disable.LoopbackCheck = $disableloopbackcheck;
+$xml.Configuration.Install.Disable.UnusedServices = $disableunusedservices;
+$xml.Configuration.Install.Disable.IEEnhancedSecurity = $disableieenhancedsecurity;
+$xml.Configuration.Install.Disable.CertificateRevocationListCheck = $disablecertificaterevocationlistcheck;
+
+## Farm
+$xml.Configuration.Farm.Passphrase = $passphrase;
+$xml.Configuration.Farm.Account.Username = "$env:userdomain\" + $spfarmaccount;
+if($spfarmpassword -eq $null -or $spfarmpassword -eq ""){
+  $xml.Configuration.Farm.Account.Password = Get-Password -account $spfarmaccount -userxml $userxml;
+}else{
+  $xml.Configuration.Farm.Account.Password = $spfarmpassword;
+}
+$xml.Configuration.Farm.CentralAdmin.Provision = $centraladminprovision;
+$xml.Configuration.Farm.CentralAdmin.Database = $centraladmindatabase;
+$xml.Configuration.Farm.CentralAdmin.Port = $centraladminport;
+$xml.Configuration.Farm.CentralAdmin.UseSSL = $centraladminssl;
+$xml.Configuration.Farm.Database.DBServer = $dbserver;
+$xml.Configuration.Farm.Database.DBAlias.Create = $dbalias;
+$xml.Configuration.Farm.Database.DBAlias.DBInstance = $dbaliasinstance;
+$xml.Configuration.Farm.Database.DBAlias.DBPort = $dbaliasport;
+$xml.Configuration.Farm.Database.DBPrefix = $dbprefix;
+$xml.Configuration.Farm.Database.ConfigDB = $configdb;
+
+# Services
+$xml.Configuration.Farm.Services.SandboxedCodeService.Start = $sanboxedcodeservicestart;
+$xml.Configuration.Farm.Services.ClaimsToWindowsTokenService.Start = $claimstowindowstokenserverstart;
+$xml.Configuration.Farm.Services.SMTP.Install = $smtpinstall;
+$xml.Configuration.Farm.Services.FoundationWebApplication.Start = $foundationwebapplicationstart;
+
+#managed account
+foreach($manageaccount in $xml.Configuration.Farm.ManagedAccounts.ManagedAccount){
+  if($manageaccount.CommonName -eq "spservice"){
+    $manageaccount.Username = "$env:userdomain\" + $spservicesaccount;
+    if($spservicespassword -eq $null -or $spservicespassword -eq ""){
+      $manageaccount.Password = Get-Password -account $spservicesaccount -userxml $userxml;
+    }else{
+      $manageaccount.Password = $spservicespassword;
+    }
+  }elseif($manageaccount.CommonName -eq "Portal"){
+    $manageaccount.Username = "$env:userdomain\" + $spapppoolaccount;
+    if($spapppoolpassword -eq $null -or $spapppoolpassword -eq ""){
+      $manageaccount.Password = Get-Password -account $spapppoolaccount -userxml $userxml;
+    }else{
+      $manageaccount.Password = $spapppoolpassword;
+    }
+  }elseif($manageaccount.CommonName -eq "SearchService"){
+    $manageaccount.Username = "$env:userdomain\" + $spsearchaccount;
+    if($spsearchpassword -eq $null -or $spsearchpassword -eq ""){
+      $manageaccount.Password = Get-Password -account $spsearchaccount -userxml $userxml;
+    }else{
+      $manageaccount.Password = $spsearchpassword;
+    }
+  }
+}
+$xml.Configuration.Farm.ObjectCacheAccounts.SuperUser = "$env:userdomain\" + $spsuperuseraccount;
+$xml.Configuration.Farm.ObjectCacheAccounts.SuperReader = "$env:userdomain\" + $spsuperreaderaccount
+
+#Logging
+$xml.Configuration.Farm.Logging.IISLogs.Compress = $logcompress;
+$xml.Configuration.Farm.Logging.IISLogs.Path = $iislogspath;
+$xml.Configuration.Farm.Logging.ULSLogs.Compress = $logcompress;
+$xml.Configuration.Farm.Logging.ULSLogs.LogLocation = $ulslogspath;
+$xml.Configuration.Farm.Logging.UsageLogs.Compress = $logcompress;
+$xml.Configuration.Farm.Logging.UsageLogs.UsageLogDir = $usagelogspath;
+
+##WebApp
+$xml.Configuration.WebApplications.WebApplication.name = $webappname;
+$xml.Configuration.WebApplications.WebApplication.applicationPool = $applicationPool;
+$xml.Configuration.WebApplications.WebApplication.url = $webappurl;
+$xml.Configuration.WebApplications.WebApplication.port = $webappport;
+$xml.Configuration.WebApplications.WebApplication.Database.Name = $webappdatabasename;
+$xml.Configuration.WebApplications.WebApplication.Database.DBServer = $dbserver;
+
+##Sitecollection
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.siteUrl = $siteUrl;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.SearchUrl = $siteUrl+"/search";
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.name = $sitecolname;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Template = $sitecoltemplate;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Time24 = $sitecoltime24;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.LCID = $sitecollcid;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Locale = $sitecollocale;
+$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Owner = "$env:userdomain\"+$sitecolowner;
+
+##switch all alias to the one defined
+$xml.Configuration.ServiceApps.ManagedMetadataServiceApp.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.UserProfileServiceApp.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.EnterpriseSearchService.EnterpriseSearchServiceApplications.EnterpriseSearchServiceApplication.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.StateService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.SPUsageService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.SecureStoreService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.AppManagementService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.SubscriptionSettingsService.Database.DBServer = $dbserver;
+
+if($spversion -eq 'Foundation'){
+$xml.Configuration.ServiceApps.EnterpriseSearchService.Provision = "false";
+$xml.Configuration.ServiceApps.WorkManagementService.Provision = "false";
+}
+##switch user for crawl
+$xml.Configuration.ServiceApps.EnterpriseSearchService.EnterpriseSearchServiceApplications.EnterpriseSearchServiceApplication.ContentAccessAccount = "$env:userdomain\"+$spcrawlaccount;
+if($spcrawlpassword -eq $null -or $spcrawlpassword -eq ""){
+  $xml.Configuration.ServiceApps.EnterpriseSearchService.EnterpriseSearchServiceApplications.EnterpriseSearchServiceApplication.ContentAccessAccountPassword = Get-Password -account $spcrawlaccount -userxml $userxml;
+}else{
+  $xml.Configuration.ServiceApps.EnterpriseSearchService.EnterpriseSearchServiceApplications.EnterpriseSearchServiceApplication.ContentAccessAccountPassword = $spcrawlpassword;
+}
+if((Test-Path "$path/xmlgenerated") -eq $false){New-Item -Name "xmlgenerated" -Path $path -type file;}
+
+
+$xml.save($xmlpath);

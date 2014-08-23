@@ -1,0 +1,38 @@
+{
+  "name": "jriviere-windows_sharepoint",
+  "version": "0.0.2",
+  "author": "jriviere",
+  "summary": "Module for managing SharePoint 2013",
+  "license": "Apache License, Version 2.0",
+  "source": "UNKNOWN",
+  "project_page": "UNKNOWN",
+  "issues_url": null,
+  "description": "Module for managing SharePoint 2013. Can Install SharePoint 2013 Foundation, Create/Remove WebApp and SiteCol",
+  "types": [
+  
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Windows"
+    }
+  ],
+  "checksums": {
+    "Modulefile": "493a9f550f9df1fd7d5ca2e94d44ea66",
+    "README": "45a634ba39f77210bdca55d50933135d",
+    "manifests/group.pp": "d67150588ae94108f1e3ace07cf336ac",
+    "manifests/init.pp": "9882d514c2cbe22a9ebac941f0dcec50",
+    "manifests/user.pp": "19c729b52de23220d26b7f84c40d205a",
+    "spec/spec_helper.rb": "a55d1e6483344f8ec6963fcb2c220372",
+    "tests/init.pp": "c0b30a2fb3f7e7360626e33660cc7dff"
+  },
+  "dependencies": [
+    {
+      "name": "puppetlabs/powershell",
+      "version_requirement": ">=1.0.2"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.2.1"
+    }
+  ]
+}
