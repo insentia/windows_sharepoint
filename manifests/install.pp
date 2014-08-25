@@ -152,7 +152,7 @@ class windows_sharepoint::install
       provider => powershell,
       command  => "New-Item -Path \"HKLM:\\Software\\\" -Name 'AutoSPInstaller' -Force | Out-Null;New-ItemProperty -Path \"HKLM:\\Software\\AutoSPInstaller\\\" -Name 'PuppetSharePointInstallInProgress' -Value 1 -PropertyType 'String' -Force | Out-Null;Start-Process 'powershell.exe' -ArgumentList '-ExecutionPolicy Bypass .\\AutoSPInstallerMain.ps1 -inputFile ${basepath}\\Puppet-SharePoint\\AutoSPInstaller\\AutoSPInstallerInput.xml -unattended' -Wait  -WorkingDirectory '${basepath}\\Puppet-SharePoint\\AutoSPInstaller\\' -Verb RunAs ;New-ItemProperty -Path \"HKLM:\\Software\\AutoSPInstaller\\\" -Name 'PuppetSharePointInstallInProgress' -Value 0 -PropertyType 'String' -Force | Out-Null;",
       timeout  => "7200",
-      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1' -eq \$true){Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ErrorAction SilentlyContinue;\$snapin = Get-PSSnapin '*SharePoint.PowerShell';if(\$snapin.count -eq 1){\$getSPStateServiceApplication = Get-SPStateServiceApplication;if(\$getSPStateServiceApplication -eq \$null){exit 1;}else{New-ItemProperty -Path \"HKLM:\\Software\\AutoSPInstaller\\\" -Name 'PuppetSharePointInstallInProgress' -Value 0 -PropertyType 'String' -Force | Out-Null;exit 1;}}else{exit 1;}}else{exit 1;}}" 
+      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1'){Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ErrorAction SilentlyContinue;\$snapin = Get-PSSnapin '*SharePoint.PowerShell';if(\$snapin.count -eq 1){\$getSPStateServiceApplication = Get-SPStateServiceApplication;if(\$getSPStateServiceApplication -eq \$null){exit 0;}else{New-ItemProperty -Path \"HKLM:\\Software\\AutoSPInstaller\\\" -Name 'PuppetSharePointInstallInProgress' -Value 0 -PropertyType 'String' -Force | Out-Null;exit 1;}}}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ErrorAction SilentlyContinue;\$snapin = Get-PSSnapin '*SharePoint.PowerShell';if(\$snapin.count -eq 1){exit 1;}else{exit 0;}}}" 
     }
 
     exec{"SetCentralAdmin Port":
@@ -160,7 +160,7 @@ class windows_sharepoint::install
       command  => "Add-PSSnapin Microsoft.SharePoint.PowerShell;Set-SPCentralAdministration -Port ${centraladminport} -Confirm:\$false",
       onlyif   => "Add-PSSnapin 'Microsoft.SharePoint.PowerShell';\$port = [Microsoft.SharePoint.Administration.SPAdministrationWebApplication]::Local.Sites.VirtualServer.Port;if(\$port -eq ${centraladminport}){exit 1;}",
     }
-    if(removedefaultwebapp){
+    if($removedefaultwebapp){
       windows_sharepoint::webapplication{"default - $webappname":
         url                    => "${webappurl}",
         applicationpoolname    => "${applicationPool}",
