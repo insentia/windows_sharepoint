@@ -419,7 +419,7 @@ If (MatchComputerName $farmServers $env:COMPUTERNAME)
                 Write-Host -ForegroundColor White " - Setting RunOnce registry entry for AutoSPInstaller..."
                 # Create the RunOnce key in case it doesn't yet exist (as I discovered on on Win2012)
                 New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\" -Name RunOnce -ErrorAction SilentlyContinue | Out-Null
-                New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce" -Name AutoSPInstaller -Value "`"$env:dp0\AutoSPInstallerLaunch.bat`" `"$inputFile`"" -Force | Out-Null
+                #New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce" -Name AutoSPInstaller -Value "`"$env:dp0\AutoSPInstallerLaunch.bat`" `"$inputFile`"" -Force | Out-Null
                 If ($xmlinput.Configuration.Install.AutoAdminLogon.Enable -eq $true)
                 {
                     If ([string]::IsNullOrEmpty($password))
@@ -454,7 +454,7 @@ If (MatchComputerName $farmServers $env:COMPUTERNAME)
                     {
                         Write-Host " - Restarting - "
                         Start-Sleep 5
-                        Restart-Computer -ErrorAction SilentlyContinue
+                        Restart-Computer -ErrorAction SilentlyContinue -force
                         if (!$?)
                         {
                             Write-Warning "Restart failed; there may be (an) other user(s) logged in!"
@@ -463,7 +463,7 @@ If (MatchComputerName $farmServers $env:COMPUTERNAME)
                         }
                     }
                     # If this is a non-remote session, launch Restart-Computer from another PS window/process
-                    else {Start-Process -FilePath "$PSHOME\powershell.exe" -ArgumentList "Write-Host ' - Restarting - '; Start-Sleep 5; Restart-Computer -ErrorAction SilentlyContinue; if (!`$?) {Write-Warning 'Restart failed; there may be (an) other user(s) logged in!'; `$forceRestart = Read-Host -Prompt ' - Do you want to force a restart? (y/n)'; if (`$forceRestart -eq 'y') {Restart-Computer -Force}}"}
+                    else {Start-Process -FilePath "$PSHOME\powershell.exe" -ArgumentList "Write-Host ' - Restarting - '; Start-Sleep 5; Restart-Computer -ErrorAction SilentlyContinue -force; if (!`$?) {Write-Warning 'Restart failed; there may be (an) other user(s) logged in!'; `$forceRestart = Read-Host -Prompt ' - Do you want to force a restart? (y/n)'; if (`$forceRestart -eq 'y') {Restart-Computer -Force}}"}
                     $restarting = $true
                 }
                 Else {Write-Host -ForegroundColor Yellow " - Please restart your computer to continue AutoSPInstaller."}
@@ -496,6 +496,7 @@ If (MatchComputerName $farmServers $env:COMPUTERNAME)
         Write-Host -ForegroundColor White "| Aborted:    $env:EndDate |"
         Write-Host -ForegroundColor White "-----------------------------------"
         $aborted = $true
+        Restart-Computer -force
         If (!$scriptCommandLine -and (!(Confirm-LocalSession))) {Pause "exit"}
     }
     Finally
@@ -553,6 +554,7 @@ If (!$aborted)
 	}
 	# Remove any lingering LogTime values in the registry
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\AutoSPInstaller\" -Name "LogTime" -ErrorAction SilentlyContinue
+	Restart-computer -Force
 }
 
 #EndRegion

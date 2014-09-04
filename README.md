@@ -12,18 +12,16 @@ This module use the [AutoSPInstaller Project](http://autospinstaller.codeplex.co
 All password will be automatically fill if you use Windows AD module and his XML file. The windows_ad module can be found in forge [jriviere/windows_ad](https://forge.puppetlabs.com/jriviere/windows_ad) or on [GitHub](https://github.com/insentia/windows_ad)
 
 The account used for installing SharePoint must be Admin local at least on each server, and SQL sysdbo or at least have SQL DB Creator and security admin rights
-Only SharePoint Foundation have been tested with that module. All others versions are not supported.
+Only SharePoint Foundation have been tested with that module. All others versions are not yet supported.
 
 This module is only compatible with SharePoint 2013.
 Only tested wiht puppet agent 3.6.2, Windows Server 2012 R2, SharePoint Foundation 2013 SP1.
 
 
 ##Last Fix/Update
-V 0.0.3 :
- - Fix AutoSPInstaller Installation Check
+V 0.0.4 :
+ - Force some reboot in AutoSpInstaller script (After prerequisites is installed, when script is completed, and when a problem occur)
  - Update ReadME
- - Fix Remove defaultwebapp parameter
- - Add reporting service Installation resource
  
 ###Setup Requirements
 Depends on the following modules:
@@ -141,7 +139,7 @@ Parameters:
 	$proxyname        # Proxy Name. Default : SQL Server Reporting Service Application Proxy
 ```
 ## Known issues
-Please don't add a '/' after the WebApp URL and site url, if you do so AutoSpInstaller will throw an error and will not create the webApp and site Coll. 
+Please don't add a '/' after the WebApp URL and site url, if you do so AutoSpInstaller will throw an error and will not create the WebApp and site Coll. 
 
 License
 -------

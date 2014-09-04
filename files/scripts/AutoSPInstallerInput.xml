@@ -103,16 +103,16 @@
   <ServiceApps>
     <ManagedMetadataServiceApp Provision="false" Name="Managed Metadata Service" ProxyName="Managed Metadata Service Proxy">
       <Database>
-        <Name>MetaData</Name>
+        <Name>Service_MetaData</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </ManagedMetadataServiceApp>
     <UserProfileServiceApp Provision="false" Name="User Profile Service Application" ProxyName="User Profile Service Application Proxy" MySiteHostLocation="" MySiteManagedPath="" EnableNetBIOSDomainNames="false" StartProfileSync="false" CreateDefaultSyncConnection="false" SyncConnectionAccount="CONTOSO\SP_ProfileSync" SyncConnectionAccountPassword="">
       <Database>
-        <ProfileDB>Profile</ProfileDB>
-        <SyncDB>Sync</SyncDB>
-        <SocialDB>Social</SocialDB>
+        <ProfileDB>Service_User_Profile</ProfileDB>
+        <SyncDB>Service_User_Services_Sync</SyncDB>
+        <SocialDB>Service_User_Social</SocialDB>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
@@ -121,7 +121,7 @@
       <EnterpriseSearchServiceApplications>
         <EnterpriseSearchServiceApplication Name="Search Service Application" FailoverDatabaseServer="" Partitioned="false" Partitions="1" SearchServiceApplicationType="Regular" ContentAccessAccount="domain\user" ContentAccessAccountPassword="password">
           <Database>
-            <Name>Search</Name>
+            <Name>Service_Search</Name>
             <DBServer>SQL_ALIAS</DBServer>
             <DBAlias Create="false" DBInstance="localhost" DBPort="" />
           </Database>
@@ -157,57 +157,57 @@
     </EnterpriseSearchService>
     <StateService Provision="localhost" Name="State Service" ProxyName="State Service Proxy">
       <Database>
-        <Name>StateService</Name>
+        <Name>Service_StateService</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </StateService>
     <WebAnalyticsService Provision="localhost" Name="Web Analytics Service Application">
       <Database>
-        <ReportingDB>WebAnalyticsReporting</ReportingDB>
-        <StagingDB>WebAnalyticsStaging</StagingDB>
+        <ReportingDB>Service_WebAnalyticsReporting</ReportingDB>
+        <StagingDB>Service_WebAnalyticsStaging</StagingDB>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </WebAnalyticsService>
     <SPUsageService Provision="localhost" Name="Usage and Health Data Collection">
       <Database>
-        <Name>UsageAndHealth</Name>
+        <Name>Service_UsageAndHealth</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </SPUsageService>
     <SecureStoreService Provision="localhost" Name="Secure Store Service" ProxyName="Secure Store Service Proxy">
       <Database>
-        <Name>SecureStore</Name>
+        <Name>Service_SecureStore</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </SecureStoreService>
     <BusinessDataConnectivity Provision="false" Name="Business Data Connectivity Service" ProxyName="Business Data Connectivity Service">
       <Database>
-        <Name>BusinessDataCatalog</Name>
+        <Name>Service_BusinessDataCatalog</Name>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </BusinessDataConnectivity>
     <WordAutomationService Provision="false" Name="Word Automation Services" ProxyName="Word Automation Services">
       <Database>
-        <Name>WordAutomation</Name>
+        <Name>Service_WordAutomation</Name>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </WordAutomationService>
     <AppManagementService Provision="localhost" Name="App Management Service" ProxyName="App Management Service" AppDomain="apps.localhost">
       <Database>
-        <Name>AppManagement</Name>
+        <Name>Service_AppManagement</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </AppManagementService>
     <SubscriptionSettingsService Provision="localhost" Name="Subscription Settings Service" AppSiteSubscriptionName="app">
       <Database>
-        <Name>SubscriptionSettings</Name>
+        <Name>Service_SubscriptionSettings</Name>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
@@ -215,7 +215,7 @@
     <WorkManagementService Provision="localhost" Name="Work Management Service Application" ProxyName="Work Management Service Application" />
     <MachineTranslationService Provision="false" Name="Machine Translation Service" ProxyName="Machine Translation Service">
       <Database>
-        <Name>TranslationService</Name>
+        <Name>Service_TranslationService</Name>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
@@ -228,14 +228,14 @@
     <AccessService Provision="false" Name="Access 2010 Service" ProxyName="Access 2010 Service" />
     <AccessServices Provision="false" Name="Access Services" ProxyName="Access Services">
       <Database>
-        <Name>AccessServices</Name>
+        <Name>Service_AccessServices</Name>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </AccessServices>
     <PerformancePointService Provision="false" Name="PerformancePoint Service" ProxyName="PerformancePoint Service" UnattendedIDUser="CONTOSO\SP_PerfPointUser" UnattendedIDPassword="">
       <Database>
-        <Name>PerformancePoint</Name>
+        <Name>Service_PerformancePoint</Name>
         <DBServer />
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
