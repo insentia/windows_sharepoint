@@ -21,7 +21,7 @@
   </Install>
   <Farm>
     <Passphrase>passPhrase@2014</Passphrase>
-    <Account AddToLocalAdminsDuringSetup="true" LeaveInLocalAdmins="false">
+    <Account AddToLocalAdminsDuringSetup="true" LeaveInLocalAdmins="true">
       <Username>domain\user</Username>
       <Password>password</Password>
     </Account>
@@ -63,6 +63,10 @@
         <Username>domain\user</Username>
         <Password>password</Password>
       </ManagedAccount>
+      <ManagedAccount CommonName="MySiteHost">
+        <Username>domain\user</Username>
+        <Password>password</Password>
+      </ManagedAccount>
     </ManagedAccounts>
     <ObjectCacheAccounts>
       <SuperUser>domain\user</SuperUser>
@@ -70,16 +74,16 @@
     </ObjectCacheAccounts>
     <Logging>
       <IISLogs Compress="true">
-        <Path>C:\LOGS</Path>
+        <Path>C:\SPLOGS\IIS</Path>
       </IISLogs>
       <ULSLogs Compress="true">
-        <LogLocation>C:\LOGS</LogLocation>
+        <LogLocation>C:\SPLOGS\ULS</LogLocation>
         <LogDiskSpaceUsageGB />
         <DaysToKeepLogs />
         <LogCutInterval />
       </ULSLogs>
       <UsageLogs Compress="true">
-        <UsageLogDir>C:\LOGS</UsageLogDir>
+        <UsageLogDir>C:\SPLOGS\USAGE</UsageLogDir>
         <UsageLogMaxSpaceGB />
         <UsageLogCutTime />
       </UsageLogs>
@@ -99,6 +103,19 @@
         <SiteCollection siteUrl="https://localhost" HostNamedSiteCollection="false" Owner="domain\user" Name="DynaPM Demo" Description="DynaPM Demo" CustomDatabase="" SearchUrl="https://localhost/search" CustomTemplate="false" Template="STS#0" LCID="1033" Locale="en-us" Time24="true" />
       </SiteCollections>
     </WebApplication>
+    <WebApplication type="MySiteHost" name="MySite Host" applicationPool="MySites" url="http://mysites.localhost" port="80" UseHostHeader="true" AddURLToLocalIntranetZone="true" GrantCurrentUserFullControl="true" useClaims="true" useBasicAuthentication="false" useOnlineWebPartCatalog="false">
+      <Database>
+        <Name>Content_MySites</Name>
+        <DBServer>SQL_ALIAS</DBServer>
+        <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
+      </Database>
+      <ManagedPaths>
+        <ManagedPath relativeUrl="personal" explicit="false" />
+      </ManagedPaths>
+      <SiteCollections>
+        <SiteCollection siteUrl="http://mysite.localhost" HostNamedSiteCollection="false" Owner="" Name="My Site Host" Description="My Site Host" CustomDatabase="" SearchUrl="http://mysites.localhost/search" CustomTemplate="false" Template="SPSMSITEHOST#0" LCID="1033" Locale="en-us" Time24="true" />
+      </SiteCollections>
+    </WebApplication>
   </WebApplications>
   <ServiceApps>
     <ManagedMetadataServiceApp Provision="false" Name="Managed Metadata Service" ProxyName="Managed Metadata Service Proxy">
@@ -111,7 +128,7 @@
     <UserProfileServiceApp Provision="false" Name="User Profile Service Application" ProxyName="User Profile Service Application Proxy" MySiteHostLocation="" MySiteManagedPath="" EnableNetBIOSDomainNames="false" StartProfileSync="false" CreateDefaultSyncConnection="false" SyncConnectionAccount="CONTOSO\SP_ProfileSync" SyncConnectionAccountPassword="">
       <Database>
         <ProfileDB>Service_User_Profile</ProfileDB>
-        <SyncDB>Service_User_Services_Sync</SyncDB>
+        <SyncDB>Service_User_Sync</SyncDB>
         <SocialDB>Service_User_Social</SocialDB>
         <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
@@ -166,7 +183,7 @@
       <Database>
         <ReportingDB>Service_WebAnalyticsReporting</ReportingDB>
         <StagingDB>Service_WebAnalyticsStaging</StagingDB>
-        <DBServer />
+        <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </WebAnalyticsService>
@@ -187,7 +204,7 @@
     <BusinessDataConnectivity Provision="false" Name="Business Data Connectivity Service" ProxyName="Business Data Connectivity Service">
       <Database>
         <Name>Service_BusinessDataCatalog</Name>
-        <DBServer />
+        <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </BusinessDataConnectivity>
@@ -216,7 +233,7 @@
     <MachineTranslationService Provision="false" Name="Machine Translation Service" ProxyName="Machine Translation Service">
       <Database>
         <Name>Service_TranslationService</Name>
-        <DBServer />
+        <DBServer>SQL_ALIAS</DBServer>
         <DBAlias Create="false" DBInstance="SERVER\INSTANCE" DBPort="" />
       </Database>
     </MachineTranslationService>

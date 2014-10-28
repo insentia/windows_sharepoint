@@ -3351,7 +3351,8 @@ Function CreateUPSAsAdmin([xml]$xmlinput)
         If (Confirm-LocalSession) # Create the UPA as usual if this isn't a remote session
         {
             # Start a process under the Farm Account's credentials, then spawn an elevated process within to finally execute the script file that actually creates the UPS
-            Start-Process -WorkingDirectory $PSHOME -FilePath "powershell.exe" -Credential $farmCredential -ArgumentList "-ExecutionPolicy Bypass -Command Start-Process -WorkingDirectory `"'$PSHOME'`" -FilePath `"'powershell.exe'`" -ArgumentList `"'$versionSwitch -ExecutionPolicy Bypass $scriptFile'`" -Verb Runas" -Wait
+            #Start-Process -WorkingDirectory $PSHOME -FilePath "powershell.exe" -Credential $farmCredential -ArgumentList "-ExecutionPolicy Bypass -Command Start-Process -WorkingDirectory `"'$PSHOME'`" -FilePath `"'powershell.exe'`" -ArgumentList `"'-ExecutionPolicy Bypass $scriptFile'`" -Verb Runas" -Wait
+            powershell.exe -File $scriptFile -ExecutionPolicy Bypass
         }
         Else # Do some fancy stuff to get this to work over a remote session
         {
