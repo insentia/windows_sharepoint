@@ -68,6 +68,12 @@ $spsuperreaderaccount = "<%= @spsuperreaderaccount%>";
 $spsuperuseraccount = "<%= @spsuperuseraccount%>";
 $spcrawlaccount = "<%= @spcrawlaccount%>";
 $spcrawlpassword = "<%= @spcrawlpassword%>";
+$spsyncaccount = "<%= @spsyncaccount%>";
+$spsyncpassword = "<%= @spsyncpassword%>";
+$spusrprfaccount = "<%= @spusrprfaccount%>";
+$spusrprfpassword = "<%= @spusrprfpassword%>";
+$spexcelaccount = "<%= @spusrprfaccount%>";
+$spexcelpassword = "<%= @spusrprfpassword%>";
 ## Log
 $logcompress = "<%= @logcompress%>";
 $iislogspath = "<%= @iislogspath%>";
@@ -84,7 +90,11 @@ $applicationPool = "<%= @applicationPool%>";
 $webappname = "<%= @webappname%>";
 $webappport = "<%= @webappport%>";
 $webappdatabasename = "<%= @webappdatabasename%>";
-  
+
+if($spversion -ne 'Foundation'){
+$mysitemanagedpath = "<%= @mysitemanagedpath %>";
+$mysitehost = "<%= @mysitehost %>";
+}
 ##DefaultSiteCol
 $siteUrl = "<%= @siteurl%>";
 $sitecolname = "<%= @sitecolname%>";
@@ -100,7 +110,11 @@ $sitecolowner = "<%= @sitecolowner%>";
 
 ## Install
 $xml.Configuration.Install.PIDKey = $key;
-$xml.Configuration.Install.SKU = 'standard';
+if($spversion -ne 'Enterprise'){
+$xml.Configuration.Install.SKU = 'Standard';
+}else{
+$xml.Configuration.Install.SKU = 'Enterprise';
+}
 $xml.Configuration.Install.OfflineInstall = $offline;
 $xml.Configuration.Install.AutoAdminLogon.Enable = $autoadminlogon;
 $xml.Configuration.Install.AutoAdminLogon.Password = $setupaccountpassword;
@@ -158,6 +172,13 @@ foreach($manageaccount in $xml.Configuration.Farm.ManagedAccounts.ManagedAccount
     }else{
       $manageaccount.Password = $spsearchpassword;
     }
+  }elseif($manageaccount.CommonName -eq "MySiteHost"){
+    $manageaccount.Username = "$env:userdomain\" + $spusrprfaccount;
+    if($spusrprfpassword -eq $null -or $spusrprfpassword -eq ""){
+      $manageaccount.Password = Get-Password -account $spusrprfaccount -userxml $userxml;
+    }else{
+      $manageaccount.Password = $spusrprfpassword;
+    }
   }
 }
 $xml.Configuration.Farm.ObjectCacheAccounts.SuperUser = "$env:userdomain\" + $spsuperuseraccount;
@@ -172,22 +193,22 @@ $xml.Configuration.Farm.Logging.UsageLogs.Compress = $logcompress;
 $xml.Configuration.Farm.Logging.UsageLogs.UsageLogDir = $usagelogspath;
 
 ##WebApp
-$xml.Configuration.WebApplications.WebApplication.name = $webappname;
-$xml.Configuration.WebApplications.WebApplication.applicationPool = $applicationPool;
-$xml.Configuration.WebApplications.WebApplication.url = $webappurl;
-$xml.Configuration.WebApplications.WebApplication.port = $webappport;
-$xml.Configuration.WebApplications.WebApplication.Database.Name = $webappdatabasename;
-$xml.Configuration.WebApplications.WebApplication.Database.DBServer = $dbserver;
+$xml.Configuration.WebApplications.WebApplication.Get(0).name = $webappname;
+$xml.Configuration.WebApplications.WebApplication.Get(0).applicationPool = $applicationPool;
+$xml.Configuration.WebApplications.WebApplication.Get(0).url = $webappurl;
+$xml.Configuration.WebApplications.WebApplication.Get(0).port = $webappport;
+$xml.Configuration.WebApplications.WebApplication.Get(0).Database.Name = $webappdatabasename;
+$xml.Configuration.WebApplications.WebApplication.Get(0).Database.DBServer = $dbserver;
 
 ##Sitecollection
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.siteUrl = $siteUrl;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.SearchUrl = $siteUrl+"/search";
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.name = $sitecolname;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Template = $sitecoltemplate;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Time24 = $sitecoltime24;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.LCID = $sitecollcid;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Locale = $sitecollocale;
-$xml.Configuration.WebApplications.WebApplication.SiteCollections.SiteCollection.Owner = "$env:userdomain\"+$sitecolowner;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.siteUrl = $siteUrl;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.SearchUrl = $siteUrl+"/search";
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.name = $sitecolname;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.Template = $sitecoltemplate;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.Time24 = $sitecoltime24;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.LCID = $sitecollcid;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.Locale = $sitecollocale;
+$xml.Configuration.WebApplications.WebApplication.Get(0).SiteCollections.SiteCollection.Owner = "$env:userdomain\"+$sitecolowner;
 
 ##switch all alias to the one defined
 $xml.Configuration.ServiceApps.ManagedMetadataServiceApp.Database.DBServer = $dbserver;
@@ -198,10 +219,57 @@ $xml.Configuration.ServiceApps.SPUsageService.Database.DBServer = $dbserver;
 $xml.Configuration.ServiceApps.SecureStoreService.Database.DBServer = $dbserver;
 $xml.Configuration.ServiceApps.AppManagementService.Database.DBServer = $dbserver;
 $xml.Configuration.ServiceApps.SubscriptionSettingsService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.WebAnalyticsService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.MachineTranslationService.Database.DBServer = $dbserver;
+$xml.Configuration.ServiceApps.BusinessDataConnectivity.Database.DBServer = $dbserver;
 
 if($spversion -eq 'Foundation'){
-$xml.Configuration.ServiceApps.EnterpriseSearchService.Provision = "false";
-$xml.Configuration.ServiceApps.WorkManagementService.Provision = "false";
+	$xml.Configuration.ServiceApps.EnterpriseSearchService.Provision = "false";
+	$xml.Configuration.ServiceApps.WorkManagementService.Provision = "false";
+	$xml.Configuration.WebApplications.RemoveChild($xml.Configuration.WebApplications.WebApplication.Get(1))
+	$xml.Configuration.Farm.ManagedAccounts.RemoveChild($xml.Configuration.Farm.ManagedAccounts.ManagedAccount.Get(3))
+}elseif($spversion -eq 'Standard' -or $spversion -eq 'Enterprise'){
+$xml.Configuration.ServiceApps.ManagedMetadataServiceApp.Provision = $computername;
+$xml.Configuration.ServiceApps.EnterpriseSearchService.Provision = $computername;
+$xml.Configuration.ServiceApps.UserProfileServiceApp.Provision = $computername;
+	$xml.Configuration.ServiceApps.WorkManagementService.Provision = $computername;
+$xml.Configuration.ServiceApps.UserProfileServiceApp.SyncConnectionAccount = "$env:userdomain\"+$spsyncaccount;
+$xml.Configuration.ServiceApps.UserProfileServiceApp.MySiteHostLocation = $mysitehost;
+$xml.Configuration.ServiceApps.UserProfileServiceApp.MySiteManagedPath = $mysitemanagedpath;
+
+foreach($webapp in $xml.Configuration.WebApplications.WebApplication){
+if($webapp.type -eq "MySiteHost"){
+$webapp.url = $mysitehost;
+$webapp.Database.DBServer = $dbserver;
+$webapp.ManagedPaths.ManagedPath.relativeUrl = $mysitemanagedpath;
+$webapp.SiteCollections.SiteCollection.siteUrl = $mysitehost;
+$webapp.SiteCollections.SiteCollection.SearchUrl = $mysitehost + "/search";
+}
+}
+
+if($spsyncpassword -eq $null -or $spsyncpassword -eq ""){
+$xml.Configuration.ServiceApps.UserProfileServiceApp.SyncConnectionAccountPassword = Get-Password -account $spsyncaccount -userxml $userxml;
+}else{$xml.Configuration.ServiceApps.UserProfileServiceApp.SyncConnectionAccountPassword = $spsyncpassword;}
+
+$xml.Configuration.ServiceApps.StateService.Provision = $computername;
+$xml.Configuration.ServiceApps.SPUsageService.Provision = $computername;
+$xml.Configuration.ServiceApps.MachineTranslationService.Provision = $computername;
+$xml.Configuration.ServiceApps.SecureStoreService.Provision = $computername;
+$xml.Configuration.ServiceApps.AppManagementService.Provision = $computername;
+$xml.Configuration.ServiceApps.SubscriptionSettingsService.Provision = $computername;
+$xml.Configuration.ServiceApps.BusinessDataConnectivity.Provision = $computername;
+
+if($spversion -eq 'Enterprise'){
+if($spexcelaccount -ne "" -or $spexcelaccount -ne $null){
+	$xml.Configuration.EnterpriseServiceApps.ExcelServices.Provision = "true";
+	$xml.Configuration.EnterpriseServiceApps.ExcelServices.UnattendedIDUser = "$env:userdomain\"+$spexcelaccount;
+	if($spexcelpassword -eq $null -or $spexcelpassword -eq ""){
+	  $xml.Configuration.EnterpriseServiceApps.ExcelServices.UnattendedIDPassword = Get-Password -account $spexcelaccount -userxml $userxml;
+	}else{
+	  $xml.Configuration.EnterpriseServiceApps.ExcelServices.UnattendedIDPassword = $spexcelpassword;
+	}
+}
+}
 }
 ##switch user for crawl
 $xml.Configuration.ServiceApps.EnterpriseSearchService.EnterpriseSearchServiceApplications.EnterpriseSearchServiceApplication.ContentAccessAccount = "$env:userdomain\"+$spcrawlaccount;

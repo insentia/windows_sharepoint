@@ -103,12 +103,18 @@ class windows_sharepoint
   $spsuperuseraccount                        = '',
   $spcrawlaccount                            = '',
   $spcrawlpassword                           = '',                 # if empty will check XML File
+  $spsyncaccount                             = '',
+  $spsyncpassword                            = '',                 # if empty will check XML File
+  $spusrprfaccount                           = '',
+  $spusrprfpassword                          = '',                # if empty will check XML File
+  $spexcelaccount                            = '',
+  $spexcelpassword                           = '',                # if empty will check XML File
 
   ## Log
   $logcompress                               = true,
-  $iislogspath                               = 'C:\LOGS',
-  $ulslogspath                               = 'C:\LOGS',
-  $usagelogspath                             = 'C:\LOGS',
+  $iislogspath                               = 'C:\SPLOGS\IIS',
+  $ulslogspath                               = 'C:\LOGS\ULS',
+  $usagelogspath                             = 'C:\LOGS\USAGE',
   
   ###DefaultWebApp
   $removedefaultwebapp                       = false,              # if true the default web app will be removed.
@@ -126,6 +132,9 @@ class windows_sharepoint
   $sitecollcid                               = 1033,
   $sitecollocale                             = 'en-us',
   $sitecolowner                              = '',  
+  
+  $mysitehost                                = hiera('windows_sharepoint::mysitehost', ''),
+  $mysitemanagedpath                         = hiera('windows_sharepoint::mysitemanagedpath', 'personal'),
   
   $computername                              = $::hostname,        #will take computername from facter
 ){
@@ -198,6 +207,12 @@ class windows_sharepoint
     spsuperuseraccount                        => $spsuperuseraccount,
     spcrawlaccount                            => $spcrawlaccount,
     spcrawlpassword                           => $spcrawlpassword,
+    spsyncaccount                             => $spsyncaccount,
+    spsyncpassword                            => $spsyncpassword,
+    spusrprfaccount                           => $spusrprfaccount,
+    spusrprfpassword                          => $spusrprfpassword,
+    spexcelaccount                            => $spexcelaccount,
+    spexcelpassword                           => $spexcelpassword,
 
   ## Log
     logcompress                               => $logcompress,

@@ -1,0 +1,7 @@
+$letter = $null;
+if(test-path '<%= @basepath %>\\Puppet-SharePoint\\isos.xml'){
+[xml]$xml = New-Object system.Xml.XmlDocument;[xml]$xml = Get-Content '<%= @basepath %>\\Puppet-SharePoint\\isos.xml';
+foreach($iso in $xml.configuration.isos.iso){if($iso.ImagePath -eq '<%= @sppath %>'){$letter = $iso.DriveLetter;}}
+if($letter -ne $null){Push-Location;cd $letter':' ;
+Copy-Item * -Destination '<%= @basepath %>\\Puppet-SharePoint\\2013\\SharePoint\\' -Recurse -Force
+Pop-Location;}}{exit 0}

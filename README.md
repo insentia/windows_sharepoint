@@ -4,24 +4,28 @@ This is the windows_sharepoint module.
 
 ##Module Description
 
-This module allow you to manage user and group in SharePoint 2013
+This module allow you to manage user and group in SharePoint 2013. Allow you to install and configure SharePoint 2013
 You can found this module on the forge [jriviere/windows_sharepoint](https://forge.puppetlabs.com/jriviere/windows_sharepoint) or on [GitHub](https://github.com/insentia/windows_sharepoint)
 
-This module use the [AutoSPInstaller Project](http://autospinstaller.codeplex.com/) to install and configure SharePoint. v3.96 (6 July 2014)
+This module use the [AutoSPInstaller Project](http://autospinstaller.codeplex.com/) to install and configure SharePoint. v3.96 (6 July 2014). This version have been modified to run with puppet.
 
 All password will be automatically fill if you use Windows AD module and his XML file. The windows_ad module can be found in forge [jriviere/windows_ad](https://forge.puppetlabs.com/jriviere/windows_ad) or on [GitHub](https://github.com/insentia/windows_ad)
 
 The account used for installing SharePoint must be Admin local at least on each server, and SQL sysdbo or at least have SQL DB Creator and security admin rights
-Only SharePoint Foundation have been tested with that module. All others versions are not yet supported.
+Tested with :
+	SharePoint Foundation 2013 SP1
+	SharePoint Standard 2013 SP1
+	SharePoint EnterPrise 2013 SP1
 
 This module is only compatible with SharePoint 2013.
-Only tested wiht puppet agent 3.6.2, Windows Server 2012 R2, SharePoint Foundation 2013 SP1.
+Only tested with puppet agent 3.6.2, Windows Server 2012 R2
 
 
 ##Last Fix/Update
-V 0.0.4 :
- - Force some reboot in AutoSpInstaller script (After prerequisites is installed, when script is completed, and when a problem occur)
+V 0.0.5 :
+ - Add support for SharePoint Standard and Enterprise
  - Update ReadME
+ - Add warmup resource
  
 ###Setup Requirements
 Depends on the following modules:
@@ -48,6 +52,9 @@ Permit installation of SharePoint
 	  spcrawlaccount        => "spcrawl",
 	  spsuperreaderaccount  => "spsuperreader",
 	  spsuperuseraccount    => "spsuperuser",
+	  spsyncaccount         => "spsyncaccount",                  # Mandatory with Standard and enterprise
+	  spusrprfpassword      => "spusrprfaccount",                # Mandatory with Standard and enterprise
+	  spexcelaccount        => "spexcelaccount",                 # Mandatory enterprise
 	  key                   => "SYOUR-PRODU-CTKEY-OFSPS-2012S",
 	  passphrase            => "P@ssPhrase@2014",               #SharePoint Farm PassPhrase.Must be at least 8 charaters with upper character, lower character, numbers, specialcharacter (3 of this 4 categories)
 	  webappurl             => "https://localhost",
@@ -140,6 +147,8 @@ Parameters:
 ```
 ## Known issues
 Please don't add a '/' after the WebApp URL and site url, if you do so AutoSpInstaller will throw an error and will not create the WebApp and site Coll. 
+
+The User profile Service Application will be installed but the synchronisation will not work. You have to remove the UPA Service and create another one manually. (Puppet can't get back the control with infinite powershell start-process instance :(, so I have to disable this steps. ). (Don't forget to give Replicate Right to the sync user.)
 
 License
 -------
