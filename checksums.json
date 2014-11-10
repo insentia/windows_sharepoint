@@ -1,5 +1,5 @@
 {
-  "README.md": "68b58565b4ea59fc2cf198fc2d96eeb4",
+  "README.md": "884f5a511bd1c3036036c2b50dc15d9d",
   "files/SPBestWarmUp.ps1": "4107e92fcdce331fa587244d7ba76f55",
   "files/scripts/AutoSPInstallerConfigureRemoteTarget.ps1": "66768963e90327b1f9690a8675d46c99",
   "files/scripts/AutoSPInstallerFunctions.ps1": "f4bd9fdacb75eeb5a4d329fb3ee4fb3f",
@@ -16,9 +16,9 @@
   "manifests/user.pp": "c5cb86ed54c37e79f4cdf1707f69e693",
   "manifests/warmup.pp": "dd44a2255421f5efd7c34bf285af2e30",
   "manifests/webapplication.pp": "7c690040af083e6587ffaec020c8e884",
-  "metadata.json": "f66b2091e1c33140b06634004b11f31c",
+  "metadata.json": "4066cc80831bcff26d78ea1a9701e1a6",
   "spec/spec_helper.rb": "09ccbe4bbe4503df6281e6ec7977973d",
-  "templates/autospinstaller.erb": "1c5f6aef3940826fd013997ab2268fc6",
+  "templates/autospinstaller.erb": "60302f3d04417993682434e5993a620b",
   "templates/prepsp-server.erb": "185af19640a80f6b9407d01fd663597a",
   "tests/init.pp": "8c73e1c608d3c893a72dfc892b8d2de4"
 }
