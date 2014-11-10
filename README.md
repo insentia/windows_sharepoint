@@ -22,10 +22,8 @@ Only tested with puppet agent 3.6.2, Windows Server 2012 R2
 
 
 ##Last Fix/Update
-V 0.0.5 :
- - Add support for SharePoint Standard and Enterprise
- - Update ReadME
- - Add warmup resource
+V 0.0.6 :
+ - Fix use s-spexcelaccount instead of s-spusrprfaccount (enterprise edition)
  
 ###Setup Requirements
 Depends on the following modules:
@@ -54,7 +52,7 @@ Permit installation of SharePoint
 	  spsuperuseraccount    => "spsuperuser",
 	  spsyncaccount         => "spsyncaccount",                  # Mandatory with Standard and enterprise
 	  spusrprfpassword      => "spusrprfaccount",                # Mandatory with Standard and enterprise
-	  spexcelaccount        => "spexcelaccount",                 # Mandatory enterprise
+	  spexcelaccount        => "spexcelaccount",                 # Mandatory with enterprise
 	  key                   => "SYOUR-PRODU-CTKEY-OFSPS-2012S",
 	  passphrase            => "P@ssPhrase@2014",               #SharePoint Farm PassPhrase.Must be at least 8 charaters with upper character, lower character, numbers, specialcharacter (3 of this 4 categories)
 	  webappurl             => "https://localhost",
