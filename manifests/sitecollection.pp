@@ -27,16 +27,16 @@ define windows_sharepoint::sitecollection(
   }
  if($ensure == present){
     exec{"SiteCol - Create - ${sitecolname}":
-      command => "Add-PSSnapin 'Microsoft.SharePoint.PowerShell';if('${contentdatabase}' -eq ''){New-SPSite -Name '${sitecolname}' -Url '${sitecolurl}' -OwnerAlias '${owneralias}' -Description '${description}' -template '${sitecoltemplate}'}else{New-SPSite -Name '${sitecolname}' -Url '${sitecolurl}' -OwnerAlias '${owneralias}' -ContentDatabase '${contentdatabase}' -Description '${description}' -template '${sitecoltemplate}'}",
+      command => "Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;if('${contentdatabase}' -eq ''){New-SPSite -Name '${sitecolname}' -Url '${sitecolurl}' -OwnerAlias '${owneralias}' -Description '${description}' -template '${sitecoltemplate}'}else{New-SPSite -Name '${sitecolname}' -Url '${sitecolurl}' -OwnerAlias '${owneralias}' -ContentDatabase '${contentdatabase}' -Description '${description}' -template '${sitecoltemplate}'}",
       provider => "powershell",
-      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1'){exit 1;}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell';\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 0;}else{exit 1;}}}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell';\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 0;}else{exit 1;}}",
+      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1'){exit 1;}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 0;}else{exit 1;}}}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 0;}else{exit 1;}}",
       timeout  => "1200",
     }
   }else{
     exec{"SiteCol - Remove - ${sitecolname}":
-      command => "Add-PSSnapin 'Microsoft.SharePoint.PowerShell';Remove-SPSite -Identity '${sitecolurl}' -Confirm:\$false -GradualDelete",
+      command => "Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;Remove-SPSite -Identity '${sitecolurl}' -Confirm:\$false -GradualDelete",
       provider => "powershell",
-      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1'){exit 1;}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell';\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 1;}}}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell';\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 1;}}",
+      onlyif   => "if((test-path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\") -eq \$true){if((Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\AutoSPInstaller\\\" -ErrorAction SilentlyContinue).PuppetSharePointInstallInProgress -eq '1'){exit 1;}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 1;}}}else{Add-PSSnapin 'Microsoft.SharePoint.PowerShell' -ea SilentlyContinue;\$getspsite = Get-SPSite -Identity '${sitecolurl}' -erroraction silentlycontinue;if(\$getspsite -eq \$null){exit 1;}}",
       timeout  => "600",
     }
   }
