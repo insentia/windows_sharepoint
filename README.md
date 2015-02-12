@@ -22,8 +22,9 @@ Only tested with puppet agent 3.6.2, Windows Server 2012 R2
 
 
 ##Last Fix/Update
-V 0.0.6 :
- - Fix use s-spexcelaccount instead of s-spusrprfaccount (enterprise edition)
+V 0.0.7 :
+ - Add -ea option on powershell command
+ - Update the way to execute SharePoint installation
  
 ###Setup Requirements
 Depends on the following modules:
